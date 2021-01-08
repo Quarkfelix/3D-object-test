@@ -7,8 +7,12 @@ import java.util.ArrayList;
 public class Corner {
 	public int x,y,z;
 	public int lastX,lastY,lastZ;
-	public double angleToMiddle = 0; //grad
-	public double lengthtomiddle;
+	public double angleToMiddleY = 0; //grad
+	public double angleToMiddleX = 0; //grad
+	public double angleToMiddleZ = 0; //grad
+	public double lengthtomiddleXrot;
+	public double lengthtomiddleYrot;
+	public double lengthtomiddleZrot;
 	public ArrayList<Corner> connCorners = new ArrayList<>();
 	
 // ======================================== CONSTRUCTOR ========================================

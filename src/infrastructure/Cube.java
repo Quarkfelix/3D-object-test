@@ -39,19 +39,20 @@ public class Cube {
 
 		
 		for (Corner corner : corners) {
-			corner.lengthtomiddle = Math.sqrt(Math.pow(Math.abs(corner.x-middleX), 2) + Math.pow(Math.abs(corner.z-middleZ), 2));
+			corner.lengthtomiddleYrot = Math.sqrt(Math.pow(Math.abs(corner.x-middleX), 2) + Math.pow(Math.abs(corner.z-middleZ), 2));
+			corner.lengthtomiddleXrot = Math.sqrt(Math.pow(Math.abs(corner.z-middleZ), 2) + Math.pow(Math.abs(corner.y-middleY), 2));
 			
-			//ydiff / xdiff
-			corner.angleToMiddle = Math.atan(Math.abs(corner.z-middleZ)/Math.abs(corner.x-middleX));
-			corner.angleToMiddle = Math.toDegrees(corner.angleToMiddle);
+			//for y axis
+			corner.angleToMiddleY = Math.atan(Math.abs(corner.z-middleZ)/Math.abs(corner.x-middleX));
+			corner.angleToMiddleY = Math.toDegrees(corner.angleToMiddleY);
 			if(corner.x < middleX) {
 				if(corner.z>middleZ) {
 					//180-winkel
 					System.out.println("hinten links");
-					corner.angleToMiddle = 180-corner.angleToMiddle;
+					corner.angleToMiddleY = 180-corner.angleToMiddleY;
 				} else {
 					System.out.println("vorne links");
-					corner.angleToMiddle = 180+corner.angleToMiddle;
+					corner.angleToMiddleY = 180+corner.angleToMiddleY;
 				}
 			} else {
 				if(corner.z>middleZ) {
@@ -59,7 +60,29 @@ public class Cube {
 					//passt schon
 				} else {
 					System.out.println("vorne rechts");
-					corner.angleToMiddle = 360-corner.angleToMiddle;
+					corner.angleToMiddleY = 360-corner.angleToMiddleY;
+				}
+			}
+			
+			//for x axis
+			corner.angleToMiddleX = Math.atan(Math.abs(corner.y-middleY)/Math.abs(corner.z-middleZ));
+			corner.angleToMiddleX = Math.toDegrees(corner.angleToMiddleX);
+			if(corner.z < middleZ) {
+				if(corner.y>middleY) {
+					//180-winkel
+					System.out.println("hinten links");
+					corner.angleToMiddleX = 180-corner.angleToMiddleX;
+				} else {
+					System.out.println("vorne links");
+					corner.angleToMiddleX = 180+corner.angleToMiddleX;
+				}
+			} else {
+				if(corner.y>middleY) {
+					System.out.println("hinten rechts");
+					//passt schon
+				} else {
+					System.out.println("vorne rechts");
+					corner.angleToMiddleX = 360-corner.angleToMiddleX;
 				}
 			}
 		}
@@ -80,28 +103,48 @@ public class Cube {
 // ======================================== RUN-METHOD =========================================	
 
 // ======================================== METHODS ============================================
-	private void rotate(double rotationToAddY) {
+	public void rotate(double rotationToAddX, double rotationToAddY) {
+		double xfactor;
+		double yfactor;
+		double zfactor;
+		double tempX = 0, tempY = 0, tempZ = 0;
+		
 		for (Corner c : corners) {
-			//rotate on y axis
-			
-			c.angleToMiddle = c.angleToMiddle+rotationToAddY;
-			if(c.angleToMiddle >= 360) {
-				c.angleToMiddle = c.angleToMiddle-360;
+			//rotate on X axis
+			c.angleToMiddleX = c.angleToMiddleX+rotationToAddX;
+			if(c.angleToMiddleX >= 360) {
+				c.angleToMiddleX = c.angleToMiddleX-360;
 			}
-			double xfactor = Math.cos(Math.toRadians(c.angleToMiddle));
-			double zfactor = Math.sin(Math.toRadians(c.angleToMiddle));
+			zfactor = Math.cos(Math.toRadians(c.angleToMiddleX));
+			yfactor = Math.sin(Math.toRadians(c.angleToMiddleX));
 			
-			c.setX((int) (middleX + xfactor*c.lengthtomiddle));
-			c.setZ((int) (middleZ + zfactor*c.lengthtomiddle));
-		}
+			tempZ = middleZ + zfactor*c.lengthtomiddleYrot;
+			tempY = middleY + yfactor*c.lengthtomiddleYrot;
+			
+			//rotate on y axis
+			c.angleToMiddleY = c.angleToMiddleY+rotationToAddY;
+			if(c.angleToMiddleY >= 360) {
+				c.angleToMiddleY = c.angleToMiddleY-360;
+			}
+			xfactor = Math.cos(Math.toRadians(c.angleToMiddleY));
+			zfactor = Math.sin(Math.toRadians(c.angleToMiddleY));
+			
+			tempX = middleX + xfactor*c.lengthtomiddleXrot;
+			tempZ = (tempZ + middleZ + zfactor*c.lengthtomiddleXrot)/2;
+//			c.setZ((int) (middleZ + zfactor*c.lengthtomiddle));
+//			c.setY((int) (middleY + yfactor*c.lengthtomiddle));
+			
+			c.setX((int)(tempX));
+			c.setY((int)(tempY));
+			c.setZ((int)(tempZ));
+			
+		}	
+		
+		System.out.println(corners.get(0).angleToMiddleX);
+		System.out.println(corners.get(0).angleToMiddleY);
 	}
 
 // ======================================== GET/SET METHODS ====================================
-
-
-	public void addRotationYAxis(double rotation) {
-		rotate(rotation);
-	}
 
 // ======================================== PAINT-METHODS ======================================
 	public void paint(Graphics2D g) {

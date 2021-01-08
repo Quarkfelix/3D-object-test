@@ -54,6 +54,8 @@ public class Draw extends JPanel implements Runnable{
 		g.setColor(Color.black);
 		g.fillRect(0, 0, (int)screensize.getWidth(), (int)screensize.getHeight());
 		
-		Main.surface.paint(g);
+		if(Main.surface != null) {
+			Main.surface.paint(g);
+		}
 	}
 }
