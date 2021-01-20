@@ -18,8 +18,8 @@ public class KeyHandler implements KeyListener{
 		} else {
 			KeyHandler.schalter = true;
 			System.out.println("gedreht an der X achse");
-//			Main.surface.cube.rotate(0,7);
-//			Main.surface.cube1.rotate(0,7);
+			Main.surface.cube.rotate(0,7);
+			Main.surface.cube1.rotate(0,7);
 		}
 	}
 
